@@ -1,0 +1,83 @@
+*quickrun-hook-auto_run_in_vim9*	A |quickrun-hook| for Vim script.
+
+Author: mityu <mityu.mail (at) gmail.com>
+License: zlib License
+
+
+==============================================================================
+CONTENTS			*quickrun-hook-auto_run_in_vim9-contents*
+
+INTRODUCTION			|quickrun-hook-auto_run_in_vim9-introduction|
+REQUIREMENTS			|quickrun-hook-auto_run_in_vim9-requirements|
+CONFIGURATION			|quickrun-hook-auto_run_in_vim9-configuration|
+
+
+==============================================================================
+INTRODUCTION			*quickrun-hook-auto_run_in_vim9-introduction*
+
+This is a |quickrun-hook| plugin to make easy to run Vim9 script code block.
+This hook internally inserts `:vim9script` line in the head of the code block
+automatically if it's necessary.
+
+For example, assume when the buffer is like this: >
+	1  vim9script
+	2
+	3  var vim9Var = 'This is a Vim9 script style variable'
+	4  echo vim9Var
+	5
+	6  function LegacyFunction()
+	7    let legacyVar = 'This is a legacy Vim script style variable'
+	8    echo legacyVar
+	9  endfunction
+<
+
+And run line 3-4. >
+	:3,4 QuickRun
+	# => This is a Vim9 script style variable
+<
+Successfully works because this hook adds `:vim9script` line at the head of
+given code block.  Also you can still execute legacy Vim script code block.
+Let's run line 7-8(inside of `LegacyFunction` function).
+>
+	:7,8 QuickRun
+	" => This is a legacy Vim script style variable
+<
+This also work because this hook is aware of whether the code block is
+written in legacy Vim script or Vim9 script and complete `:vim9script` line
+only if necessary.
+
+
+==============================================================================
+REQUIREMENTS			*quickrun-hook-auto_run_in_vim9-requirements*
+
+- quickrun.vim (https://github.com/thinca/vim-quickrun)
+
+
+==============================================================================
+CONFIGURATION			*quickrun-hook-auto_run_in_vim9-configuration*
+
+You have to explicitly enable this hook to use this since this hook is
+disabled in default.
+
+- To enable this hook for Vim script buffer globally: >
+	if !exists('g:quickrun_config')
+	  let g:quickrun_config = {}
+	endif
+	let g:quickrun_config.vim = {'hook/auto_run_in_vim9/enable': 1}
+<
+
+- To enable this hook for specific buffer: >
+	let b:quickrun_config = {'hook/auto_run_in_vim9/enable': 1}
+<
+
+- Or to disable this hook globally/locally: >
+	" Disable globally
+	let g:quickrun_config.vim = {'hook/auto_run_in_vim9/enable': 0}
+
+	" Disable locally
+	let b:quickrun_config = {'hook/auto_run_in_vim9/enable': 0}
+<
+
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
